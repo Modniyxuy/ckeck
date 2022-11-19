@@ -11,7 +11,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - $SERVER_PORT:$SERVER_PORT
-      - 3000:3000
+      - 9229:9229
     depends_on:
       - postgresql
     working_dir: /app
@@ -45,7 +45,6 @@ services:
     restart: unless-stopped
     ports:
       - $DATABASE_PORT:$DATABASE_PORT
-      - 5432:5432
     environment:
       POSTGRES_DB: $DATABASE
       POSTGRES_USER: $DATABASE_USERNAME
