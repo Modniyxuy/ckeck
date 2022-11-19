@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link link rel="stylesheet" href="../stylesheets/panel.css" />
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <title>Panel</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <form class="panel" action="{{ key }}" method="post">
+                <h5>СОЗДАНИЕ КВИТАНЦИИ</h5>
+                <hr class="sep" />
+                <div class="group">
+                    <input type="text" name="id" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Номер квитанции (id)</label>
+                </div>
+                <div class="group">
+                    <input type="text" name="domen" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Домен (https://...)</label>
+                </div>
+                <div class="group">
+                    <input type="text" name="senderName" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Имя отправителя</label>
+                </div>
+                <div class="group">
+                    <input type="text" name="recipientsName" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Имя получателя</label>
+                </div>
+                <div class="group">
+                    <input type="text" name="senderAddress" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Адресс отправителя</label>
+                </div>
+                <div class="group">
+                    <input type="text" name="senderPhoneNumber" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Телефон отправителя</label>
+                </div>
+                <div class="group">
+                    <input type="text" name="trackNumber" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Трек номер</label>
+                </div>
+                <div class="group">
+                    <input type="text" name="transferAmount" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Сумма перевода</label>
+                </div>
+                <div class="group">
+                    <input type="text" name="transferFee" required />
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Комиссия</label>
+                </div>
+                <div class="custom-select">
+                    <select name="language" required>
+                        <option value="">Язык</option>
+                        <option value="ua">Українська</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div class="btn-box">
+                    <button class="btn btn-submit" type="submit">
+                        Создать
+                    </button>
+                    <button class="btn btn-cancel" type="button">
+                        Отменить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="../scripts/panel.js"></script>
+</body>
+</html>
