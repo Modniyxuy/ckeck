@@ -1,28 +1,8 @@
 version: '3.8'
 
 services:
-  dev:
-    container_name: app_dev
-    image: app-dev:1.0.0
-    env_file: .env
-    build:
-      context: .
-      target: development
-      dockerfile: ./Dockerfile
-    ports:
-      - $SERVER_PORT:$SERVER_PORT
-      - 9229:9229
-    depends_on:
-      - postgresql
-    working_dir: /app
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    command: npm run start:dev
-    restart: unless-stopped
-  prod:
-    container_name: app_prod
-    image: app-prod:1.0.0
+  app:
+    container_name: app
     env_file: .env
     build:
       context: .
@@ -33,35 +13,48 @@ services:
       - 9229:9229
     depends_on:
       - postgresql
-    working_dir: /app
-    volumes:
-      - ./:/app
-      - /app/node_modules
     command: npm run start:prod
     restart: unless-stopped
   postgresql:
     container_name: postgresql
     image: postgres
-    restart: unless-stopped
     ports:
       - $DATABASE_PORT:$DATABASE_PORT
+    volumes:
+      - pg_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: $DATABASE
       POSTGRES_USER: $DATABASE_USERNAME
       POSTGRES_PASSWORD: $DATABASE_PASSWORD
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
     restart: unless-stopped
-    volumes:
-      - ./proxy.conf:/etc/nginx/conf.d/default.conf
+  nginx:
+    container_name: nginx
+    image: nginx:apline
     ports:
       - 80:80
+      - 443:443
     depends_on:
-      - dev
-      - prod
+      - app
+      - postgresql
+    volumes:
+      - ./proxy.conf:/etc/nginx/conf.d/default.conf
+      - etc-letsencrypt:/etc/letsencrypt
     networks:
-      - network
+      - 
+    restart: unless-stopped
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    depends_on:
+      - nginx
+    volumes:
+      - etc-letsencrypt:/etc/letsencrypt
+    restart: unless-stopped
+    command: cetronly --webroot --webroot-path=/app --email modniyxuy@protonmail.com --agree-tos --no-eff-email -d example.org
+volumes:
+  pg_data:
+  www-html:
+  etc-letsencrypt:
 networks:
   network:
     driver: bridge
