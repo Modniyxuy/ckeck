@@ -1,31 +1,28 @@
-FROM node:16-alpine AS development
+FROM node:16-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY --chown=node:node package*.json ./
 RUN npm ci
-COPY . .
-
-FROM node:16-alpine AS build
+COPY --chown=node:node . .
+RUN npm run build \
+    && npm prune --production
 
 USER node
+
+FROM node:16-alpine AS production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /app
 
-COPY package*.json ./
-COPY --from=development /app/node_modules ./node_modules
-COPY . .
-RUN npm run build
-RUN npm ci --only=production && npm cache clean --force
+COPY --from=builder --chown=node:node /app/package*.json ./
+COPY --from=builder --chown=node:node /app/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /app/public/ ./public/
+COPY --from=builder --chown=node:node /app/dist/ ./dist/
 
-FROM node:16-alpine AS production
+USER node
 
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/public ./public
-COPY --from=build /app/dist ./dist
-
-CMD [ "node", "dist/src/main.js" ]
+CMD ["node", "dist/main.js"]
 ENTRYPOINT ["/app/entrypoint.sh"]
